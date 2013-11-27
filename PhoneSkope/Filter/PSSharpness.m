@@ -13,37 +13,34 @@
 {
     return [NSArray arrayWithObjects:@"0", @"1", @"2", @"3", @"4", @"5", @"6", nil];
 }
--(GPUImageSharpenFilter*)getSharpness:(int)value
+-(void)setSharpness:(int)value withObject:(GPUImageSharpenFilter*)object
 {
-    GPUImageOutput<GPUImageInput>* filter = [[GPUImageSharpenFilter alloc] init];
     
     switch (value) {
         case 0:
-            [(GPUImageSharpenFilter *)filter setSharpness:-1];
+            [object setSharpness:-1];
             break;
         case 1:
-            [(GPUImageSharpenFilter *)filter setSharpness:-0.15];
+            [object setSharpness:-0.15];
             break;
         case 2:
-            [(GPUImageSharpenFilter *)filter setSharpness:0.7];
+            [object setSharpness:0.7];
             break;
         case 3:
-            [(GPUImageSharpenFilter *)filter setSharpness:1.5];
+            [object setSharpness:1.5];
             break;
         case 4:
-            [(GPUImageSharpenFilter *)filter setSharpness:2.3];
+            [object setSharpness:2.3];
             break;
         case 5:
-            [(GPUImageSharpenFilter *)filter setSharpness:3.1];
+            [object setSharpness:3.1];
             break;
         case 6:
-            [(GPUImageSharpenFilter *)filter setSharpness:4];
+            [object setSharpness:4];
             break;
         default:
             break;
     }
-    
-    return (GPUImageSharpenFilter*)filter;
 }
 -(GPUImageSharpenFilter*)getDefaultValue
 {

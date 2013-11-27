@@ -14,31 +14,34 @@
 {
     return [NSArray arrayWithObjects:@"Auto", @"incandescent", @"fluorescent", @"daylight", @"cloudy-daylight", nil];
 }
--(GPUImageWhiteBalanceFilter *)getWhiteblance:(WhiteBlanceType)type;
+-(GPUImageWhiteBalanceFilter*)getDefaultValue
 {
-    
     GPUImageOutput<GPUImageInput>* filter = [[GPUImageWhiteBalanceFilter alloc] init];
+    [(GPUImageWhiteBalanceFilter *)filter setTemperature:5000];
+    return (GPUImageWhiteBalanceFilter *)filter;
+}
+-(void)setWhiteblance:(WhiteBlanceType)type withObject:(GPUImageWhiteBalanceFilter*)object
+{
     
     switch (type) {
         case WhiteBlanceAuto:
-            [(GPUImageWhiteBalanceFilter *)filter setTemperature:5000];
+            [object setTemperature:5000];
             break;
         case WhiteBlanceIncandescent:
-            [(GPUImageWhiteBalanceFilter *)filter setTemperature:0];
+            [object setTemperature:0];
             break;
         case WhiteBlanceFluorescent:
-            [(GPUImageWhiteBalanceFilter *)filter setTemperature:2500];
+            [object setTemperature:2500];
             break;
         case WhiteBlanceDaylight:
-            [(GPUImageWhiteBalanceFilter *)filter setTemperature:7500];
+            [object setTemperature:7500];
             break;
         case WhiteBlanceCloudyDaylight:
-            [(GPUImageWhiteBalanceFilter *)filter setTemperature:10000];
+            [object setTemperature:10000];
             break;
         default:
             break;
     }
     
-    return (GPUImageWhiteBalanceFilter*)filter;
 }
 @end

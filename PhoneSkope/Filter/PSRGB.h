@@ -11,7 +11,7 @@
 
 @interface PSRGB : NSObject
 -(NSArray*)getArray;
--(GPUImageRGBFilter*)getRGB:(int)value;
+-(void)setRGB:(int)value withObject:(GPUImageRGBFilter*)object;
 -(GPUImageRGBFilter*)getDefaultValue;
 
 @end

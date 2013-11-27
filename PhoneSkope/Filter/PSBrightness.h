@@ -11,6 +11,6 @@
 
 @interface PSBrightness : NSObject
 -(NSArray*)getArray;
--(GPUImageBrightnessFilter*)getBrightness:(int)value;
+-(void)setBrightness:(int)value withObject:(GPUImageBrightnessFilter*)object;
 -(GPUImageBrightnessFilter*)getDefaultValue;
 @end

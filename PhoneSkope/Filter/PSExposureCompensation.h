@@ -11,6 +11,6 @@
 
 @interface PSExposureCompensation : NSObject
 -(NSArray*)getArray;
--(GPUImageExposureFilter*)getExposureCompensation:(int)value;
+-(void)setExposureCompensation:(int)value withObject:(GPUImageExposureFilter*)object;
 -(GPUImageExposureFilter*)getDefaultValue;
 @end

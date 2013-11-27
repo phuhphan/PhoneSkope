@@ -13,37 +13,34 @@
 {
     return [NSArray arrayWithObjects:@"0", @"1", @"2", @"3", @"4", @"5", @"6", nil];
 }
--(GPUImageBrightnessFilter*)getBrightness:(int)value
+-(void)setBrightness:(int)value withObject:(GPUImageBrightnessFilter*)object
 {
-    GPUImageOutput<GPUImageInput>* filter = [[GPUImageBrightnessFilter alloc] init];
     
     switch (value) {
         case 0:
-            [(GPUImageBrightnessFilter *)filter setBrightness:-1];
+            [object setBrightness:-1];
             break;
         case 1:
-            [(GPUImageBrightnessFilter *)filter setBrightness:-0.65];
+            [object setBrightness:-0.65];
             break;
         case 2:
-            [(GPUImageBrightnessFilter *)filter setBrightness:-0.25];
+            [object setBrightness:-0.25];
             break;
         case 3:
-            [(GPUImageBrightnessFilter *)filter setBrightness:0];
+            [object setBrightness:0];
             break;
         case 4:
-            [(GPUImageBrightnessFilter *)filter setBrightness:0.25];
+            [object setBrightness:0.25];
             break;
         case 5:
-            [(GPUImageBrightnessFilter *)filter setBrightness:0.65];
+            [object setBrightness:0.65];
             break;
         case 6:
-            [(GPUImageBrightnessFilter *)filter setBrightness:1];
+            [object setBrightness:1];
             break;
         default:
             break;
     }
-    
-    return (GPUImageBrightnessFilter*)filter;
 }
 -(GPUImageBrightnessFilter*)getDefaultValue
 {

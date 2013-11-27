@@ -11,6 +11,6 @@
 
 @interface PSContrast : NSObject
 -(NSArray*)getArray;
--(GPUImageContrastFilter*)getContrast:(int)value;
+-(void)setContrast:(int)value withObject:(GPUImageContrastFilter*)object;
 -(GPUImageContrastFilter*)getDefaultValue;
 @end

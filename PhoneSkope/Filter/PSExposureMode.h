@@ -11,6 +11,6 @@
 
 @interface PSExposureMode : NSObject
 -(NSArray*)getArray;
--(GPUImageExposureFilter*)getExposureMode:(int)value;
+-(void)setExposureMode:(int)value withObject:(GPUImageExposureFilter*)object;
 -(GPUImageExposureFilter*)getDefaultValue;
 @end

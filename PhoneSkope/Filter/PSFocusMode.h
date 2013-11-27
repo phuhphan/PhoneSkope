@@ -11,6 +11,6 @@
 
 @interface PSFocusMode : NSObject
 -(NSArray*)getArray;
--(GPUImageTiltShiftFilter*)getFocusMode:(int)value;
+-(void)setFocusMode:(int)value withObject:(GPUImageTiltShiftFilter*)object;
 -(GPUImageTiltShiftFilter*)getDefaultValue;
 @end

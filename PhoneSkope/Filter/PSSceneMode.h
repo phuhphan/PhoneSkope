@@ -11,6 +11,6 @@
 
 @interface PSSceneMode : NSObject
 -(NSArray*)getArray;
--(GPUImageRGBFilter*)getRGB:(int)value;
 -(GPUImageRGBFilter*)getDefaultValue;
+-(void)setSceneMode:(int)type withObject:(GPUImageRGBFilter*)object;
 @end

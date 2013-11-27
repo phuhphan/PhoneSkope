@@ -73,21 +73,20 @@
     _slider.transform = CGAffineTransformMakeRotation (-3.14/2);
     _slider.maximumValue = 5;
     _slider.minimumValue = 1;
+    _slider.value = 1;
     [_slider addTarget:self action:@selector(changeValue:) forControlEvents:UIControlEventValueChanged];
     _mainMenuView.frame = CGRectMake(20, 100, _mainMenuView.frame.size.width, _mainMenuView.frame.size.height);
     //videoCamera setCaptureSessionPreset:AV
     //    videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionFront];
     //    videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset1280x720 cameraPosition:AVCaptureDevicePositionBack];
     //    videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset1920x1080 cameraPosition:AVCaptureDevicePositionBack];
-    
-    
-    
     _videoCamera.outputImageOrientation = UIInterfaceOrientationPortrait;
     _videoCamera.horizontallyMirrorFrontFacingCamera = NO;
     _videoCamera.horizontallyMirrorRearFacingCamera = NO;
     GPUImageView* filterView = [[GPUImageView alloc] init];
     
     self.view = filterView;
+    
     _gerenalObj = [[PSGeneral alloc]initWithView:self.view Camera:_videoCamera];
     _captureObj = [[PSCaptureSupport alloc]init];
     [self.view addSubview:_slider];
@@ -100,6 +99,9 @@
     
     _mainMenuView.hidden = YES;
     [_videoCamera startCameraCapture];
+    
+    
+
     
     _arrayCamera = [[NSMutableArray alloc]initWithArray:[_gerenalObj getData:SessionCamera]];
     _arrayPhoto = [[NSMutableArray alloc]initWithArray:[_gerenalObj getData:SessionPhoto]];
@@ -330,10 +332,7 @@
 -(IBAction)changeValue:(id)sender
 {
     NSLog(@"zoom");
-    GPUImageTransformFilter *transformFilter = [[GPUImageTransformFilter alloc] init];
-    [transformFilter setAffineTransform:CGAffineTransformMakeScale(_slider.value, _slider.value)];
-    [_videoCamera addTarget:transformFilter];
-    [transformFilter addTarget:(GPUImageView*)self.view];
+    [_gerenalObj setZoom:_slider.value];
 }
 -(IBAction)showFlashMenuPress:(id)sender
 {

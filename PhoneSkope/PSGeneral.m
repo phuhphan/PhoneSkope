@@ -70,9 +70,12 @@
 
 -(void)getDefaultValue
 {
+    
+    transformFilter = [[GPUImageTransformFilter alloc] init];
+    [transformFilter setAffineTransform:CGAffineTransformMakeScale(1.0, 1.0)];
+    
     whiteBalanceObj             = [[PSWhiteBalance alloc]init];
-    whiteBalanceFilter          = [whiteBalanceObj getWhiteblance:WhiteBlanceAuto];
-    //self.currentFilter          = whiteBalanceFilter;
+    whiteBalanceFilter          = [whiteBalanceObj getDefaultValue];
     
     sceneModeObj                = [[PSSceneMode alloc] init];
     sceneModeFilter             = [sceneModeObj getDefaultValue];
@@ -125,34 +128,34 @@
 {
     switch (type) {
         case FilterTypeWhiteBlance:
-            whiteBalanceFilter          = [whiteBalanceObj getWhiteblance:value];
+            [whiteBalanceObj setWhiteblance:value withObject:(GPUImageWhiteBalanceFilter*)whiteBalanceFilter];
             break;
         case FilterTypeSceneMode:
-            sceneModeFilter             = [sceneModeObj getRGB:value];
+            [sceneModeObj setSceneMode:value withObject:(GPUImageRGBFilter*)sceneModeFilter];
             break;
         case FilterTypeExposureMode:
-            exposureModeFilter          = [exposureModeObj getExposureMode:value];
+            [exposureModeObj setExposureMode:value withObject:(GPUImageExposureFilter*)exposureModeFilter];
             break;
         case FilterTypeExposureCompensation:
-            exposureCompensationFilter  = [exposureCompensationObj getExposureCompensation:value];
+            [exposureCompensationObj setExposureCompensation:value withObject:(GPUImageExposureFilter*)exposureCompensationFilter];
             break;
         case FilterTypeFocusMode:
-            focusModeFilter             = [focusModeObj getFocusMode:value];
+            [focusModeObj setFocusMode:value withObject:(GPUImageTiltShiftFilter*)focusModeFilter];
             break;
         case FilterTypeBrightness:
-            brightnessFilter            = [brightnessObj getBrightness:value];
+            [brightnessObj setBrightness:value withObject:(GPUImageBrightnessFilter*)brightnessFilter];
             break;
         case FilterTypeContrast:
-            contrastFilter              = [contrastObj getContrast:value];
+            [contrastObj setContrast:value withObject:(GPUImageContrastFilter*)contrastFilter];
             break;
         case FilterTypeSaturation:
-            saturationFilter            = [saturationObj getSaturation:value];
+            [saturationObj setSaturation:value withObject:(GPUImageSaturationFilter*)saturationFilter];
             break;
         case FilterTypeSharpness:
-            sharpnessFilter             = [sharpnessObj getSharpness:value];
+            [sharpnessObj setSharpness:value withObject:(GPUImageSharpenFilter*)sharpnessFilter];
             break;
         case FilterTypeRGB:
-            rgbFilter                   = [rgbObj getRGB:value];
+            [rgbObj setRGB:value withObject:(GPUImageRGBFilter*)rgbFilter];
             break;
         case FilterTypeTransform_2D:
             transform_2DFilter          = [transform_2DObj getTransform_2D:value];
@@ -167,13 +170,16 @@
             montionDetectorFilter       = [motionDetectorObj getMotionDetector:value];
             break;
         default:
-            whiteBalanceFilter          = [whiteBalanceObj getWhiteblance:value];
+            [whiteBalanceObj setWhiteblance:value withObject:(GPUImageWhiteBalanceFilter*)whiteBalanceFilter];
             break;
     }
 
-    [self setFilter];
+    //[self setFilter];
 }
-
+-(void)setZoom:(int)value
+{
+    [transformFilter setAffineTransform:CGAffineTransformMakeScale(value, value)];
+}
 -(void)setFilter
 {
 //    [montionDetectorFilter addTarget:(GPUImageView*)_view];
@@ -181,6 +187,7 @@
 //    [montionDetectorFilter addTarget:(GPUImageView *)_view];
 //    [cropFilter addTarget:(GPUImageView*)_view];
 //    [_camera addTarget:cropFilter];
+    
     [whiteBalanceFilter         addTarget: sceneModeFilter];
     [sceneModeFilter            addTarget: exposureModeFilter];
     [exposureModeFilter         addTarget: exposureCompensationFilter];
@@ -190,11 +197,11 @@
     [contrastFilter             addTarget: saturationFilter];
     [saturationFilter           addTarget: sharpnessFilter];
     [sharpnessFilter            addTarget: rgbFilter];
-    
+    [rgbFilter                  addTarget: transformFilter];
     
     self.currentFilter = [[GPUImageFilterGroup alloc]init];
     [self.currentFilter setInitialFilters:[NSArray arrayWithObjects:whiteBalanceFilter,nil]];
-    [self.currentFilter setTerminalFilter:rgbFilter];
+    [self.currentFilter setTerminalFilter:transformFilter];
     if (isRotateVideo) {
         [_camera addTarget:self.currentFilter];
     }

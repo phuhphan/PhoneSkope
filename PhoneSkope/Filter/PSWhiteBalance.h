@@ -18,5 +18,6 @@ typedef enum
 }WhiteBlanceType;
 @interface PSWhiteBalance : NSObject
 -(NSArray*)getArray;
--(GPUImageWhiteBalanceFilter *)getWhiteblance:(WhiteBlanceType)type;
+-(GPUImageWhiteBalanceFilter*)getDefaultValue;
+-(void)setWhiteblance:(WhiteBlanceType)type withObject:(GPUImageWhiteBalanceFilter*)object;
 @end

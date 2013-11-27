@@ -11,6 +11,6 @@
 
 @interface PSSaturation : NSObject
 -(NSArray*)getArray;
--(GPUImageSaturationFilter*)getSaturation:(int)value;
+-(void)setSaturation:(int)value withObject:(GPUImageSaturationFilter*)object;
 -(GPUImageSaturationFilter*)getDefaultValue;
 @end

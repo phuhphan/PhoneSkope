@@ -11,6 +11,6 @@
 
 @interface PSSharpness : NSObject
 -(NSArray*)getArray;
--(GPUImageSharpenFilter*)getSharpness:(int)value;
+-(void)setSharpness:(int)value withObject:(GPUImageSharpenFilter*)object;
 -(GPUImageSharpenFilter*)getDefaultValue;
 @end

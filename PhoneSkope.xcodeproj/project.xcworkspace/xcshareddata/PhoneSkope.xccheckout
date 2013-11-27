@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>5408E3D8-D96A-4DEB-A11F-F2B904D195B3</string>
+	<string>C0C082C3-DAC2-4226-BFE9-57D8F416C96D</string>
 	<key>IDESourceControlProjectName</key>
 	<string>PhoneSkope</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>F3ED241C-C7D1-40E4-9A3D-D30F02C45C5A</key>
-		<string>https://github.com/iproway/PhoneSkope.git</string>
+		<key>FDEAE213-2D1D-4F38-A604-DC1101618512</key>
+		<string>https://github.com/phuhphan/PhoneSkope.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>PhoneSkope.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>F3ED241C-C7D1-40E4-9A3D-D30F02C45C5A</key>
+		<key>FDEAE213-2D1D-4F38-A604-DC1101618512</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/iproway/PhoneSkope.git</string>
+	<string>https://github.com/phuhphan/PhoneSkope.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>F3ED241C-C7D1-40E4-9A3D-D30F02C45C5A</string>
+	<string>FDEAE213-2D1D-4F38-A604-DC1101618512</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>F3ED241C-C7D1-40E4-9A3D-D30F02C45C5A</string>
+			<string>FDEAE213-2D1D-4F38-A604-DC1101618512</string>
 			<key>IDESourceControlWCCName</key>
 			<string>PhoneSkope</string>
 		</dict>
