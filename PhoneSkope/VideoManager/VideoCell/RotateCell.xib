@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
@@ -7,35 +7,35 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="47" id="YbD-oG-pNc" customClass="RotateCell">
-            <rect key="frame" x="0.0" y="0.0" width="280" height="39"/>
+            <rect key="frame" x="0.0" y="0.0" width="285" height="39"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="YbD-oG-pNc" id="3Zb-ym-Ixc">
-                <rect key="frame" x="0.0" y="0.0" width="280" height="38"/>
+                <rect key="frame" x="0.0" y="0.0" width="285" height="38"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="qm5-A8-TY2">
-                        <rect key="frame" x="10" y="4" width="173" height="29"/>
+                        <rect key="frame" x="10" y="4" width="174" height="29"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <color key="highlightedColor" red="0.94442265601282605" green="1" blue="0.92766948019259943" alpha="1" colorSpace="calibratedRGB"/>
                     </label>
                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Wrd-Va-KTz">
-                        <rect key="frame" x="181" y="0.0" width="79" height="39"/>
+                        <rect key="frame" x="192" y="0.0" width="79" height="39"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <fontDescription key="fontDescription" type="system" pointSize="12"/>
                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" id="IYR-yY-wOo">
-                        <rect key="frame" x="221" y="4" width="51" height="31"/>
+                        <rect key="frame" x="228" y="4" width="51" height="31"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <connections>
                             <action selector="swichAction:" destination="YbD-oG-pNc" eventType="valueChanged" id="aZh-Qn-dHD"/>
                         </connections>
                     </switch>
                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="next.png" id="woe-kV-e4f">
-                        <rect key="frame" x="267" y="0.0" width="13" height="39"/>
+                        <rect key="frame" x="272" y="-1" width="13" height="39"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                     </imageView>
                 </subviews>
@@ -74,7 +74,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="menulist_icon.png" width="97" height="24"/>
+        <image name="menulist_icon.png" width="194" height="48"/>
         <image name="next.png" width="12" height="39"/>
     </resources>
 </document>

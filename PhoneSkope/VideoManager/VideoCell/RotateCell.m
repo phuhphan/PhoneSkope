@@ -62,7 +62,7 @@
         case CellManyChoice:
             self.enable.hidden      = YES;
             self.detail.hidden      = NO;
-            self.tickImage.hidden   = YES;
+            self.tickImage.hidden   = NO;
             self.detail.text      = value;
             break;
         case CellSwithChoice:

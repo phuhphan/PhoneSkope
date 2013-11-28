@@ -176,7 +176,7 @@
 
     //[self setFilter];
 }
--(void)setZoom:(int)value
+-(void)setZoom:(float)value
 {
     [transformFilter setAffineTransform:CGAffineTransformMakeScale(value, value)];
 }

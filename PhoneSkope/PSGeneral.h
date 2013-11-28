@@ -109,7 +109,7 @@ typedef enum
 -(id)initWithView:(UIView*)v Camera:(GPUImageVideoCamera *)camera;
 -(id)initWithView:(UIView*)v StillCamera:(GPUImageStillCamera *)camera;
 -(void)setType:(FilterType)type WithValue:(int)value;
--(void)setZoom:(int)value;
+-(void)setZoom:(float)value;
 -(NSArray*)getMenuArray:(FilterType)type;
 -(NSArray*)getMenuPhotoArray:(PhotoType)type;
 -(NSArray*)getMenuOtherArray:(OthersType)type;

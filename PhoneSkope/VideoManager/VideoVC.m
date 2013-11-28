@@ -15,13 +15,14 @@
 {
     __weak IBOutlet UIButton* menu;
     __weak IBOutlet UIButton* zoomButton;
+    __weak IBOutlet UIButton* flashButton;
     __weak IBOutlet UIButton* capture;
     __weak IBOutlet UIView* flashMenu;
     __weak IBOutlet UIView* captureView;
     __weak IBOutlet UITableView* _tableView;
-    __weak IBOutlet UIButton* _showMenuButton;
     __weak IBOutlet UIView* _mainMenuView;
-    __weak IBOutlet UISegmentedControl* _segment;
+    __weak IBOutlet UIButton* _cameraButton, *_photoButton, *_otherButton;
+    __weak IBOutlet UIView* _menuView;
     __weak IBOutlet UILabel* _titleLabel;
     UISlider* _slider;
     NSArray* _arrayChildElement;
@@ -63,12 +64,13 @@
     filter = [[GPUImageFilterGroup alloc] init];
     isCaptureImage = YES;
     flashMenu = [[NSBundle mainBundle]loadNibNamed:@"VideoVC" owner:self options:nil][1];
-    flashMenu.frame = CGRectMake(10, 30, 40, 25);
+    flashMenu.frame = CGRectMake(10, 63, flashMenu.frame.size.width, flashMenu.frame.size.height);
     //captureView = [[NSBundle mainBundle]loadNibNamed:@"VideoVC" owner:self options:nil][2];
     captureView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height - captureView.frame.size.height, captureView.frame.size.width, captureView.frame.size.height);
     
     menu.frame = CGRectMake((320 - menu.frame.size.width)/2, 30, menu.frame.size.width, menu.frame.size.height);
     zoomButton.frame = CGRectMake(self.view.frame.size.width - 10 - zoomButton.frame.size.width, 30, zoomButton.frame.size.width, zoomButton.frame.size.height);
+    flashButton.frame = CGRectMake(10, 30, flashButton.frame.size.width, flashButton.frame.size.height);
     _slider = [[UISlider alloc]initWithFrame:CGRectMake(165, 200, 280, 29)];
     _slider.transform = CGAffineTransformMakeRotation (-3.14/2);
     _slider.maximumValue = 5;
@@ -94,9 +96,10 @@
     [self.view addSubview:_mainMenuView];
     [self.view addSubview:flashMenu];
     [self.view addSubview:zoomButton];
+    [self.view addSubview:flashButton];
     [self.view addSubview:captureView];
 
-    
+    flashMenu.hidden = YES;
     _mainMenuView.hidden = YES;
     [_videoCamera startCameraCapture];
     
@@ -236,7 +239,7 @@
         if (object.type != CellSwithChoice) {
             gerenalObject = object;
             _titleLabel.text = object.name;
-            _segment.hidden = YES;
+            _menuView.hidden = YES;
             [_tableView reloadData];
         }
     }
@@ -250,6 +253,8 @@
     if (_mainMenuView.hidden) {
         _mainMenuView.hidden = NO;
         _slider.hidden = YES;
+        [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom_normal.png"] forState:UIControlStateHighlighted];
+        [zoomButton setBackgroundImage:[UIImage imageNamed:@"zoom_normal.png"] forState:UIControlStateNormal];
         [menu setBackgroundImage:[UIImage imageNamed:@"optionbutton_highlight.png"] forState:UIControlStateNormal];
         [menu setBackgroundImage:[UIImage imageNamed:@"optionbutton_highlight.png"] forState:UIControlStateHighlighted];
     }
@@ -262,12 +267,12 @@
 }
 -(IBAction)backButton:(id)sender
 {
-    _segment.hidden = NO;
-    [self segmentDidChange:_segment];
+    _menuView.hidden = NO;
+    [self segmentDidChange:_cameraButton];
 }
 -(IBAction)captureImage:(id)sender
 {
-    if (isCaptureImage == NO) {
+    if (isCaptureImage) {
         [_videoCamera stopCameraCapture];
         GPUImageStillCamera* stillcamera;
         
@@ -336,21 +341,29 @@
 }
 -(IBAction)showFlashMenuPress:(id)sender
 {
-    _showMenuButton.hidden = YES;
-    [UIView animateWithDuration:0.3 animations:^{
-        flashMenu.frame = CGRectMake(flashMenu.frame.origin.x, flashMenu.frame.origin.y, 163, flashMenu.frame.size.height);
-    }];
-    menu.hidden = YES;
-    _mainMenuView.hidden = YES;
+    if (flashMenu.hidden) {
+        flashMenu.hidden = NO;
+        _mainMenuView.hidden = YES;
+    }
+    else
+    {
+        flashMenu.hidden = YES;
+    }
+    
 }
 -(IBAction)zoomPress:(id)sender
 {
+    UIButton* button = (UIButton*)sender;
     if (_slider.hidden) {
+        [button setBackgroundImage:[UIImage imageNamed:@"zoom_selected.png"] forState:UIControlStateHighlighted];
+        [button setBackgroundImage:[UIImage imageNamed:@"zoom_selected.png"] forState:UIControlStateNormal];
         _slider.hidden = NO;
         _mainMenuView.hidden = YES;
     }
     else
     {
+        [button setBackgroundImage:[UIImage imageNamed:@"zoom_normal.png"] forState:UIControlStateHighlighted];
+        [button setBackgroundImage:[UIImage imageNamed:@"zoom_normal.png"] forState:UIControlStateNormal];
         _slider.hidden = YES;
     }
 }
@@ -359,37 +372,32 @@
 {
     UIButton* button = (UIButton*)sender;
     if (isCaptureImage) {
-        [button setTitle:@"Cap" forState:UIControlStateHighlighted];
-        [button setTitle:@"Cap" forState:UIControlStateNormal];
-        [capture setTitle:@"Rot" forState:UIControlStateHighlighted];
-        [capture setTitle:@"Rot" forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"switchStatusCapture.png"] forState:UIControlStateHighlighted];
+        [button setBackgroundImage:[UIImage imageNamed:@"switchStatusCapture.png"] forState:UIControlStateNormal];
+        [capture setBackgroundImage:[UIImage imageNamed:@"camera_start_rotate_image.png"] forState:UIControlStateHighlighted];
+        [capture setBackgroundImage:[UIImage imageNamed:@"camera_start_rotate_image.png"] forState:UIControlStateNormal];
         isCaptureImage = NO;
-        [_segment setTitle:@"Video" forSegmentAtIndex:1];
-        [_segment setSelectedSegmentIndex:0];
-        [self segmentDidChange:_segment];
+        [_photoButton setTitle:@"Video" forState:UIControlStateNormal];
+        [_photoButton setTitle:@"Video" forState:UIControlStateHighlighted];
+        [self segmentDidChange:_cameraButton];
     }
     else
     {
-        [button setTitle:@"Rot" forState:UIControlStateHighlighted];
-        [button setTitle:@"Rot" forState:UIControlStateNormal];
-        [capture setTitle:@"Cap" forState:UIControlStateHighlighted];
-        [capture setTitle:@"Cap" forState:UIControlStateNormal];
+        [button setBackgroundImage:[UIImage imageNamed:@"switchStatusCamera.png"] forState:UIControlStateHighlighted];
+        [button setBackgroundImage:[UIImage imageNamed:@"switchStatusCamera.png"] forState:UIControlStateNormal];
+        [capture setBackgroundImage:[UIImage imageNamed:@"video_capture_icon.png"] forState:UIControlStateHighlighted];
+        [capture setBackgroundImage:[UIImage imageNamed:@"video_capture_icon.png"] forState:UIControlStateNormal];
         isCaptureImage = YES;
-        [_segment setTitle:@"Photo" forSegmentAtIndex:1];
-        [_segment setSelectedSegmentIndex:0];
-        [self segmentDidChange:_segment];
+        [_photoButton setTitle:@"Photo" forState:UIControlStateNormal];
+        [_photoButton setTitle:@"Photo" forState:UIControlStateHighlighted];
+        [self segmentDidChange:_cameraButton];
     }
 }
 
 -(IBAction)actionMenuPress:(id)sender
 {
     UIButton* button = (UIButton*)sender;
-    _showMenuButton.hidden = NO;
-    flashMenu.frame = CGRectMake(flashMenu.frame.origin.x, flashMenu.frame.origin.y, 40, flashMenu.frame.size.height);
-    menu.hidden = NO;
-    
-    [_showMenuButton setTitle:button.titleLabel.text forState:UIControlStateNormal];
-    [_showMenuButton setTitle:button.titleLabel.text forState:UIControlStateHighlighted];
+    flashMenu.hidden = YES;
     if (button.tag == 3) {
         if([flashLight isTorchAvailable] && [flashLight isTorchModeSupported:AVCaptureTorchModeOn])
         {
@@ -412,10 +420,20 @@
     }
 }
 - (IBAction)segmentDidChange:(id)sender {
+    UIButton* button = (UIButton*)sender;
     
-    switch (_segment.selectedSegmentIndex) {
+    [_cameraButton setBackgroundImage:[UIImage imageNamed:@"camera_menu_icon.png"] forState:UIControlStateNormal];
+    [_cameraButton setBackgroundImage:[UIImage imageNamed:@"camera_menu_icon.png"] forState:UIControlStateHighlighted];
+    [_photoButton setBackgroundImage:[UIImage imageNamed:@"photo_menu_icon.png"] forState:UIControlStateNormal];
+    [_photoButton setBackgroundImage:[UIImage imageNamed:@"photo_menu_icon.png"] forState:UIControlStateHighlighted];
+    [_otherButton setBackgroundImage:[UIImage imageNamed:@"other_menu_icon.png"] forState:UIControlStateNormal];
+    [_otherButton setBackgroundImage:[UIImage imageNamed:@"other_menu_icon.png"] forState:UIControlStateHighlighted];
+    
+    switch (button.tag) {
         case 0:
             sessionType = SessionCamera;
+            [button setBackgroundImage:[UIImage imageNamed:@"camera_background.png"] forState:UIControlStateNormal];
+            [button setBackgroundImage:[UIImage imageNamed:@"camera_background.png"] forState:UIControlStateHighlighted];
             break;
         case 1:
             if (isCaptureImage)
@@ -426,9 +444,13 @@
             {
                 sessionType = SessionVideo;
             }
+            [button setBackgroundImage:[UIImage imageNamed:@"photo_menu_icon_highlight.png"] forState:UIControlStateNormal];
+            [button setBackgroundImage:[UIImage imageNamed:@"photo_menu_icon_highlight.png"] forState:UIControlStateHighlighted];
             break;
         case 2:
             sessionType = SessionOthers;
+            [button setBackgroundImage:[UIImage imageNamed:@"other_background.png"] forState:UIControlStateNormal];
+            [button setBackgroundImage:[UIImage imageNamed:@"other_background.png"] forState:UIControlStateHighlighted];
             break;
         default:
             break;
@@ -473,7 +495,7 @@
     }
     object.value = [_arrayChildElement objectAtIndex:indexPath.row];
     
-    [self segmentDidChange:_segment];
-    _segment.hidden = NO;
+    [self segmentDidChange:_cameraButton];
+    _menuView.hidden = NO;
 }
 @end
