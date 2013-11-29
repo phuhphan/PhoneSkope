@@ -7,7 +7,7 @@
 //
 
 #import "PSCaptureSupport.h"
-
+#import "DateChange.h"
 @implementation PSCaptureSupport
 -(id)init
 {
@@ -74,35 +74,48 @@
             _photoObject.photoJPEGQuanlity = (float)((float)value + 1) * 0.1;
             break;
         case PhotoSaveGPS:
-            if (value == 1)
-                _photoObject.photoSaveGPS = YES;
-            else
-                _photoObject.photoSaveGPS = NO;
+            _photoObject.photoSaveGPS = value;
             break;
         case PhotoOverlay:
-            if (value == NO)
-                _photoObject.photoOverlay = YES;
-            else
-                _photoObject.photoOverlay = NO;
+            _photoObject.photoOverlay = value;
             break;
         case PhotoDelayJPEG:
-            if (value == NO)
-                _photoObject.photoDelayJPEG = YES;
-            else
-                _photoObject.photoDelayJPEG = NO;
+             _photoObject.photoDelayJPEG = value;
             break;
         case PhotoSelfTimer:
-            _photoObject.photoSelfTimer = value + 1;
+            _photoObject.photoSelfTimer = value;
             break;
         case PhotoStabilizer:
-            if (value == NO)
-                _photoObject.photoStabilizer = YES;
-            else
-                _photoObject.photoStabilizer = NO;
+            _photoObject.photoStabilizer = value;
             break;
         default:
             
             break;
     }
 }
+-(UIImage *)addText:(UIImage *)img{
+    
+    NSDate* dateNow = [DateChange getCurrentDate];
+    NSString* text1 = [NSString stringWithFormat:@"%d-%d-%d %d-%d", [DateChange getDay:dateNow],[DateChange getMonth:dateNow], [DateChange getYear:dateNow], [DateChange getHour:dateNow], [DateChange getMinute:dateNow]];
+    
+    int w = img.size.width;
+    int h = img.size.height;
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef context = CGBitmapContextCreate(NULL, w, h, 8, 4 * w, colorSpace, kCGImageAlphaPremultipliedFirst);
+    CGContextDrawImage(context, CGRectMake(0, 0, w, h), img.CGImage);
+    
+	char* text	= (char *)[text1 cStringUsingEncoding:NSASCIIStringEncoding];
+    CGContextSelectFont(context, "Arial",20, kCGEncodingMacRoman);
+    CGContextSetTextDrawingMode(context, kCGTextFill);
+    CGContextSetRGBFillColor(context, 0, 0, 0, 1);
+    CGContextShowTextAtPoint(context,10,10,text, strlen(text));
+    CGImageRef imgCombined = CGBitmapContextCreateImage(context);
+    
+	CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
+    
+	return [UIImage imageWithCGImage:imgCombined];
+}
+
 @end
+

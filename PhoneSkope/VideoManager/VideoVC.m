@@ -8,28 +8,22 @@
 
 #import "VideoVC.h"
 #import "PSVideoObject.h"
+#import <AssetsLibrary/ALAssetsLibrary.h>
+#import <MapKit/MapKit.h>
+#import "PSTimerView.h"
+#import <ImageIO/ImageIO.h>
 
 #define degreesToRadian(x) (M_PI * (x) / 180.0)
 
 @interface VideoVC ()
 {
-    __weak IBOutlet UIButton* menu;
-    __weak IBOutlet UIButton* zoomButton;
-    __weak IBOutlet UIButton* flashButton;
-    __weak IBOutlet UIButton* capture;
-    __weak IBOutlet UIView* flashMenu;
-    __weak IBOutlet UIView* captureView;
     __weak IBOutlet UITableView* _tableView;
-    __weak IBOutlet UIView* _mainMenuView;
-    __weak IBOutlet UIButton* _cameraButton, *_photoButton, *_otherButton;
-    __weak IBOutlet UIView* _menuView;
+    __weak IBOutlet UIView* _mainMenuView,* _menuView,* captureView,* flashMenu;
+    __weak IBOutlet UIButton* _cameraButton, *_photoButton, *_otherButton,* capture,* flashButton,* zoomButton, * imageButton,* menu;
     __weak IBOutlet UILabel* _titleLabel;
     UISlider* _slider;
     NSArray* _arrayChildElement;
-    NSMutableArray* _arrayCamera;
-    NSMutableArray* _arrayPhoto;
-    NSMutableArray* _arrayOther;
-    NSMutableArray* _arrayVideo;
+    NSMutableArray* _arrayCamera, * _arrayVideo, * _arrayPhoto,* _arrayOther;
     FilterType _filterType;
     PhotoType _photoType;
     OthersType _otherType;
@@ -41,6 +35,8 @@
     PSVideoObject* gerenalObject;
     AVCaptureDevice *flashLight;
     NSURL *moviePath;
+    NSTimer* timerReduce;
+    PSTimerView* _timerView;
 }
 @end
 
@@ -60,10 +56,13 @@
     [super viewDidLoad];
     isChildData = NO;
     flashLight = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-    _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480 cameraPosition:AVCaptureDevicePositionBack];
+    _videoCamera = [[GPUImageVideoCamera alloc] initWithSessionPreset:AVCaptureSessionPreset640x480  cameraPosition:AVCaptureDevicePositionBack];
+    _stillcamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPresetHigh cameraPosition:AVCaptureDevicePositionBack];
     filter = [[GPUImageFilterGroup alloc] init];
     isCaptureImage = YES;
     flashMenu = [[NSBundle mainBundle]loadNibNamed:@"VideoVC" owner:self options:nil][1];
+    _timerView = [[NSBundle mainBundle]loadNibNamed:@"PSTimerView" owner:self options:nil][0];
+    _timerView.frame = CGRectMake(0, ([UIScreen mainScreen].bounds.size.height - _timerView.frame.size.width)/2, _timerView.frame.size.width, _timerView.frame.size.width);
     flashMenu.frame = CGRectMake(10, 63, flashMenu.frame.size.width, flashMenu.frame.size.height);
     //captureView = [[NSBundle mainBundle]loadNibNamed:@"VideoVC" owner:self options:nil][2];
     captureView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height - captureView.frame.size.height, captureView.frame.size.width, captureView.frame.size.height);
@@ -98,7 +97,9 @@
     [self.view addSubview:zoomButton];
     [self.view addSubview:flashButton];
     [self.view addSubview:captureView];
+    [self.view addSubview:_timerView];
 
+    _timerView.hidden = YES;
     flashMenu.hidden = YES;
     _mainMenuView.hidden = YES;
     [_videoCamera startCameraCapture];
@@ -112,6 +113,11 @@
     _arrayVideo = [[NSMutableArray alloc]initWithArray:[_gerenalObj getData:SessionVideo]];
     sessionType = SessionCamera;
     [_tableView reloadData];
+}
+
+-(void)initData
+{
+    
 }
 
 #pragma mark TableViewDelegate
@@ -273,53 +279,15 @@
 -(IBAction)captureImage:(id)sender
 {
     if (isCaptureImage) {
-        [_videoCamera stopCameraCapture];
-        GPUImageStillCamera* stillcamera;
-        
-        if (_captureObj.photoObject.photoDelayJPEG) {
-            stillcamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPresetHigh cameraPosition:AVCaptureDevicePositionBack];
-        }
-        else if(_captureObj.photoObject.photoResolution != nil)
-        {
-            stillcamera = [[GPUImageStillCamera alloc] initWithSessionPreset:_captureObj.photoObject.photoResolution cameraPosition:AVCaptureDevicePositionBack];
+        if (_captureObj.photoObject.photoSelfTimer == 0) {
+            [self startCapture];
         }
         else
-            stillcamera = [[GPUImageStillCamera alloc] initWithSessionPreset:AVCaptureSessionPresetPhoto cameraPosition:AVCaptureDevicePositionBack];
-        
-        AVCaptureConnection *videoConnection = [stillcamera videoCaptureConnection];
-        if (_captureObj.photoObject.photoStabilizer) {
-            if ([videoConnection isVideoStabilizationSupported])
-            {
-                NSLog(@"VideoStabilizationSupported! Curr val: %i", [videoConnection isVideoStabilizationEnabled]);
-                if (![videoConnection isVideoStabilizationEnabled])
-                {
-                    NSLog(@"enabling Video Stabilization!");
-                    videoConnection.enablesVideoStabilizationWhenAvailable= YES;
-                    NSLog(@"after: %i", [videoConnection isVideoStabilizationEnabled]);
-                }
-            }
+        {
+            _timerView.timerLabel.text = [NSString stringWithFormat:@"%d",_captureObj.photoObject.photoSelfTimer];
+            _timerView.hidden = NO;
+            timerReduce = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(showTimer) userInfo:nil repeats:YES];
         }
-        stillcamera.outputImageOrientation = UIInterfaceOrientationPortrait;
-        //_gerenalObj = [[PSGeneral alloc]initWithView:self.view StillCamera:stillcamera];
-        [stillcamera startCameraCapture];
-        
-        [stillcamera capturePhotoAsImageProcessedUpToFilter:_gerenalObj.currentFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
-            NSLog(@"abcde");
-            NSData *dataForPNGFile = UIImageJPEGRepresentation(processedImage, _captureObj.photoObject.photoJPEGQuanlity);
-            
-            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString *documentsDirectory = [paths objectAtIndex:0];
-            
-            NSError *error2 = nil;
-            if (![dataForPNGFile writeToFile:[documentsDirectory stringByAppendingPathComponent:@"FilteredPhoto.jpg"] options:NSAtomicWrite error:&error2])
-            {
-                return;
-            }
-            NSLog(@"%@",[documentsDirectory stringByAppendingPathComponent:@"FilteredPhoto.jpg"]);
-            UIImage* image= [UIImage imageWithContentsOfFile:[documentsDirectory stringByAppendingPathComponent:@"FilteredPhoto.jpg"]];
-            UIImageWriteToSavedPhotosAlbum(image, self, nil, nil);
-            [self viewDidLoad];
-        }];
     }
     else
     {
@@ -332,6 +300,90 @@
         _videoCamera.audioEncodingTarget = self.movieWriter;
         [self.movieWriter startRecording];
     }
+}
+
+-(void)showTimer
+{
+    _timerView.timerLabel.text = [NSString stringWithFormat:@"%d",([_timerView.timerLabel.text intValue] - 1)];
+    NSLog(@"Timer: %@",_timerView.timerLabel.text);
+    if ([_timerView.timerLabel.text intValue] == 0) {
+        _timerView.hidden = YES;
+        [timerReduce invalidate];
+        [self startCapture];
+    }
+}
+
+-(void)startCapture
+{
+    [_videoCamera stopCameraCapture];
+    [_stillcamera startCameraCapture];
+    _stillcamera.outputImageOrientation = UIInterfaceOrientationPortrait;
+    if (_captureObj.photoObject.photoDelayJPEG) {
+        [_stillcamera setCaptureSessionPreset:AVCaptureSessionPresetHigh];
+    }
+    else if(_captureObj.photoObject.photoResolution != nil)
+    {
+        [_stillcamera setCaptureSessionPreset:_captureObj.photoObject.photoResolution];
+    }
+    else
+        [_stillcamera setCaptureSessionPreset:AVCaptureSessionPresetPhoto];
+    
+    AVCaptureConnection *videoConnection = [_stillcamera videoCaptureConnection];
+    if (_captureObj.photoObject.photoStabilizer) {
+        if ([videoConnection isVideoStabilizationSupported])
+        {
+            NSLog(@"VideoStabilizationSupported! Curr val: %i", [videoConnection isVideoStabilizationEnabled]);
+            if (![videoConnection isVideoStabilizationEnabled])
+            {
+                NSLog(@"enabling Video Stabilization!");
+                videoConnection.enablesVideoStabilizationWhenAvailable= YES;
+                NSLog(@"after: %i", [videoConnection isVideoStabilizationEnabled]);
+            }
+        }
+    }
+    [_stillcamera capturePhotoAsImageProcessedUpToFilter:_gerenalObj.currentFilter withCompletionHandler:^(UIImage *processedImage, NSError *error) {
+        NSLog(@"abcde");
+        NSData *dataForPNGFile = UIImageJPEGRepresentation(processedImage, _captureObj.photoObject.photoJPEGQuanlity);
+        
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *documentsDirectory = [paths objectAtIndex:0];
+        NSError *error2 = nil;
+        if (![dataForPNGFile writeToFile:[documentsDirectory stringByAppendingPathComponent:@"FilteredPhoto.jpg"] options:NSAtomicWrite error:&error2])
+        {
+            return;
+        }
+        NSLog(@"%@",[documentsDirectory stringByAppendingPathComponent:@"FilteredPhoto.jpg"]);
+        UIImage* image= [UIImage imageWithContentsOfFile:[documentsDirectory stringByAppendingPathComponent:@"FilteredPhoto.jpg"]];
+        
+        if (_captureObj.photoObject.photoOverlay) {
+            image   = [_captureObj addText:image];
+        }
+        
+        if (_captureObj.photoObject.photoSaveGPS) {
+            CLLocation* loc = [[CLLocation alloc]init];
+            ALAssetsLibrary* library = [[ALAssetsLibrary alloc] init];
+            NSDateFormatter* formatter = [[NSDateFormatter alloc]init];
+            NSDictionary *gpsDict   = [NSDictionary dictionaryWithObjectsAndKeys:
+                                       [NSNumber numberWithFloat:fabs(loc.coordinate.latitude)], kCGImagePropertyGPSLatitude
+                                       , ((loc.coordinate.latitude >= 0) ? @"N" : @"S"), kCGImagePropertyGPSLatitudeRef
+                                       , [NSNumber numberWithFloat:fabs(loc.coordinate.longitude)], kCGImagePropertyGPSLongitude
+                                       , ((loc.coordinate.longitude >= 0) ? @"E" : @"W"), kCGImagePropertyGPSLongitudeRef
+                                       , [formatter stringFromDate:[loc timestamp]], kCGImagePropertyGPSTimeStamp
+                                       , [NSNumber numberWithFloat:fabs(loc.altitude)], kCGImagePropertyGPSAltitude
+                                       , nil];
+            [library writeImageDataToSavedPhotosAlbum:dataForPNGFile metadata:gpsDict completionBlock:^(NSURL *assetURL, NSError *error) {
+            }];
+        }
+        else
+            UIImageWriteToSavedPhotosAlbum(image, self, nil, nil);
+        
+        [imageButton setBackgroundImage:image forState:UIControlStateNormal];
+        [imageButton setBackgroundImage:image forState:UIControlStateHighlighted];
+        // [self viewDidLoad];
+    }];
+    
+    [_stillcamera stopCameraCapture];
+    [_videoCamera startCameraCapture];
 }
 
 -(IBAction)changeValue:(id)sender

@@ -17,6 +17,7 @@
 }
 @property(nonatomic,strong) GPUImageVideoCamera *videoCamera;
 @property(nonatomic,strong) GPUImageMovieWriter *movieWriter;
+@property(nonatomic,strong) GPUImageStillCamera* stillcamera;
 
 @property(nonatomic,strong) PSGeneral* gerenalObj;
 @property(nonatomic,strong) PSCaptureSupport* captureObj;

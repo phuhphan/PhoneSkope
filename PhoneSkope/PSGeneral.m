@@ -287,7 +287,7 @@
             return [[NSArray alloc]initWithObjects:@"0",nil];
             break;
         case PhotoSelfTimer:
-            return [[NSArray alloc]initWithObjects:@"1s", @"2s", @"3s", @"4s", @"5s", nil];
+            return [[NSArray alloc]initWithObjects:@"None", @"1s", @"2s", @"3s", @"4s", @"5s", nil];
             break;
         case PhotoStabilizer:
             return [[NSArray alloc]initWithObjects:@"0",nil];

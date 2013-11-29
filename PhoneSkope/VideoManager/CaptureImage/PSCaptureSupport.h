@@ -10,9 +10,10 @@
 #import "PSPhotoObject.h"
 #import <AVFoundation/AVFoundation.h>
 #import "PSGeneral.h"
+#import <MapKit/MapKit.h>
 
 @interface PSCaptureSupport : NSObject
 -(void)setType:(PhotoType)type forValue:(int)value;
-
+-(UIImage *)addText:(UIImage *)img;
 @property(nonatomic,strong) PSPhotoObject* photoObject;
 @end
