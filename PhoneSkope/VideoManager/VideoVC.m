@@ -63,7 +63,7 @@
     flashMenu = [[NSBundle mainBundle]loadNibNamed:@"VideoVC" owner:self options:nil][1];
     _timerView = [[NSBundle mainBundle]loadNibNamed:@"PSTimerView" owner:self options:nil][0];
     _timerView.frame = CGRectMake(0, ([UIScreen mainScreen].bounds.size.height - _timerView.frame.size.width)/2, _timerView.frame.size.width, _timerView.frame.size.width);
-    flashMenu.frame = CGRectMake(10, 63, flashMenu.frame.size.width, flashMenu.frame.size.height);
+    flashMenu.frame = CGRectMake(10, 68, flashMenu.frame.size.width, flashMenu.frame.size.height);
     //captureView = [[NSBundle mainBundle]loadNibNamed:@"VideoVC" owner:self options:nil][2];
     captureView.frame = CGRectMake(0, [UIScreen mainScreen].bounds.size.height - captureView.frame.size.height, captureView.frame.size.width, captureView.frame.size.height);
     
@@ -395,11 +395,15 @@
 {
     if (flashMenu.hidden) {
         flashMenu.hidden = NO;
+        [flashButton setBackgroundImage:[UIImage imageNamed:@"flashHighLight.png"] forState:UIControlStateHighlighted];
+        [flashButton setBackgroundImage:[UIImage imageNamed:@"flashHighLight.png"] forState:UIControlStateNormal];
         _mainMenuView.hidden = YES;
     }
     else
     {
         flashMenu.hidden = YES;
+        [flashButton setBackgroundImage:[UIImage imageNamed:@"flashNormal.png"] forState:UIControlStateHighlighted];
+        [flashButton setBackgroundImage:[UIImage imageNamed:@"flashNormal.png"] forState:UIControlStateNormal];
     }
     
 }
@@ -450,6 +454,8 @@
 {
     UIButton* button = (UIButton*)sender;
     flashMenu.hidden = YES;
+    [flashButton setBackgroundImage:[UIImage imageNamed:@"flashNormal.png"] forState:UIControlStateHighlighted];
+    [flashButton setBackgroundImage:[UIImage imageNamed:@"flashNormal.png"] forState:UIControlStateNormal];
     if (button.tag == 3) {
         if([flashLight isTorchAvailable] && [flashLight isTorchModeSupported:AVCaptureTorchModeOn])
         {
